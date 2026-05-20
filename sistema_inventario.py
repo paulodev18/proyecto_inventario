@@ -1,8 +1,13 @@
-nombre = input("Nombre del producto: ")
-cantidad = int(input("Cantidad: "))
-#print("Producto:", nombre, "Cantidad:", cantidad)
+inventario = {}
+while True:
+	nombre = input("Nombre del producto o salir: ")
+	if nombre == "salir":
+		break
+	cantidad = int(input("Cantidad: "))
 
-if cantidad < 0:
-	print ("la cantidad no puede ser negativa")
-else:
-	print ("Producto: ",nombre, " Cantidad: ",cantidad)
+	if cantidad < 0:
+		print ("cantidad inválida, No se agregó el producto.")
+	else:
+		inventario[nombre] = cantidad
+		print ("Producto agregado.")
+print ("Inventario final:",inventario)
