@@ -10,4 +10,4 @@ while True:
 	else:
 		inventario[nombre] = cantidad
 		print ("Producto agregado.")
-print ("INVENTARIO FINAL:",inventario)
+print ("*** INVENTARIO ***",inventario)
