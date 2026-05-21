@@ -1,13 +1,4 @@
-inventario = {}
-while True:
-	nombre = input("Nombre del producto o salir: ")
-	if nombre == "salir":
-		break
-	cantidad = int(input("Cantidad: "))
 
-	if cantidad < 0:
-		print ("cantidad inválida, No se agregó el producto.")
-	else:
-		inventario[nombre] = cantidad
-		print ("Producto agregado.")
-print ("Inventario final:",inventario)
+print("=== INVENTARIO ===")
+for producto, cantidad in inventario.items():
+    print(f"{producto}: {cantidad} unidades")
