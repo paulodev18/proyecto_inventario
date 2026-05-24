@@ -1,5 +1,6 @@
 inventario = {}
 while True:
+#este es un comentario para visualizar en github
 	nombre = input("Nombre del producto o salir: ")
 	if nombre == "salir":
 		break
