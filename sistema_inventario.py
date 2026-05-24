@@ -1,3 +1,4 @@
+#Mi sistema de inventario 
 inventario = {}
 while True:
 #este es un comentario para visualizar en github
