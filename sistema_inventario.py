@@ -29,3 +29,47 @@ def main():
 # Punto de entrada del programa
 if __name__ == "__main__":
     main()
+# ============================================
+# NUEVO MÓDULO CON ESTRUCTURA CONDICIONAL
+# ============================================
+
+def validar_cantidad(cantidad):
+    """
+    Módulo que valida una cantidad usando estructura condicional
+    Retorna:
+        - True si la cantidad es válida (mayor que 0)
+        - False si es inválida
+        - Un mensaje explicativo
+    """
+    if cantidad > 0:
+        return True, f"Cantidad {cantidad} es válida"
+    elif cantidad == 0:
+        return False, "Error: la cantidad no puede ser cero"
+    else:
+        return False, "Error: la cantidad no puede ser negativa"
+
+def main_v2():
+    """Versión 2: Incorpora validación condicional"""
+    mostrar_bienvenida()99
+    
+    # Entrada de datos (secuencial)
+    nombre = input("Nombre del producto: ")
+    cantidad = int(input("Cantidad: "))
+    
+    # Llamada al módulo condicional
+    es_valida, mensaje = validar_cantidad(cantidad)
+    
+    # Estructura condicional para mostrar resultado
+    if es_valida:
+        print(f"✓ Producto '{nombre}' agregado correctamente")
+        print(f"  {mensaje}")
+    else:
+        print(f"✗ No se pudo agregar '{nombre}'")
+        print(f"  {mensaje}")
+    
+    print("\n--- FIN DEL PROGRAMA ---")
+
+# Comenta la ejecución anterior y usa la nueva:
+# if __name__ == "__main__":
+# main() 	# Version 1
+  main_v2()	# Version 2
