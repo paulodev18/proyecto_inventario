@@ -1,18 +1,36 @@
 # ============================================
-# SISTEMA DE INVENTARIO - VERSIÓN MODULAR COMPLETA
-# Conceptos: Secuencial + Condicional + Repetitivo (while/for)
+# SISTEMA DE INVENTARIO - VERSIÓN FINAL
+# Módulos organizados por tipo de estructura
 # ============================================
 
-# ---------- MÓDULO 1: ESTRUCTURA SECUENCIAL ----------
+# ============================================
+# 1. MÓDULOS CON ESTRUCTURA SECUENCIAL
+# ============================================
+
 def mostrar_bienvenida():
-    """Muestra mensaje de bienvenida (secuencial)"""
+    """Secuencial: muestra mensaje de bienvenida"""
     print("=" * 50)
-    print("   SISTEMA DE INVENTARIO - VERSIÓN MODULAR")
+    print("   SISTEMA DE INVENTARIO - VERSIÓN FINAL")
+    print("=" * 50)
+    print("Este sistema te permite gestionar tu inventario")
+    print("de manera modular y organizada")
     print("=" * 50)
 
-# ---------- MÓDULO 2: ESTRUCTURA CONDICIONAL ----------
+def mostrar_despedida():
+    """Secuencial: muestra mensaje de despedida"""
+    print("\n" + "=" * 50)
+    print("   GRACIAS POR USAR EL SISTEMA")
+    print("=" * 50)
+
+# ============================================
+# 2. MÓDULOS CON ESTRUCTURA CONDICIONAL
+# ============================================
+
 def validar_cantidad(cantidad):
-    """Valida si una cantidad es válida (condicional if-elif-else)"""
+    """
+    Condicional (if-elif-else): valida si cantidad es válida
+    Retorna: (es_valida, mensaje)
+    """
     if cantidad > 0:
         return True, "Cantidad válida"
     elif cantidad == 0:
@@ -20,154 +38,144 @@ def validar_cantidad(cantidad):
     else:
         return False, "La cantidad no puede ser negativa"
 
-# ---------- MÓDULO 3: ESTRUCTURA REPETITIVA (while) ----------
-def agregar_multiple_productos():
+def validar_producto_existe(inventario, nombre):
+    """Condicional simple (if-else): verifica si un producto existe"""
+    if nombre in inventario:
+        return True
+    else:
+        return False
+
+def procesar_agregado(inventario, nombre, cantidad):
     """
-    Permite agregar varios productos usando un bucle while
-    El usuario decide cuándo terminar escribiendo 'fin'
+    Condicionales anidadas: procesa el agregado de un producto
+    Retorna: (inventario_actualizado, mensaje)
     """
-    inventario = {}  # Diccionario vacío para guardar productos
-    contador = 0     # Contador para mostrar cuántos se agregaron
+    es_valida, mensaje = validar_cantidad(cantidad)
     
-    print("\n--- AGREGAR PRODUCTOS ---")
-    print("Escribe 'fin' para terminar\n")
+    if not es_valida:
+        return inventario, f"✗ Error: {mensaje}"
     
-    while True:  # Bucle infinito controlado por break
+    # Condicional anidada (dentro de otra condicional)
+    if nombre in inventario:
+        inventario[nombre] += cantidad
+        return inventario, f"✓ Se sumaron {cantidad} a '{nombre}'. Total: {inventario[nombre]}"
+    else:
+        inventario[nombre] = cantidad
+        return inventario, f"✓ Producto '{nombre}' agregado con {cantidad} unidades"
+
+# ============================================
+# 3. MÓDULOS CON ESTRUCTURA REPETITIVA
+# ============================================
+
+def agregar_productos_multiple(inventario):
+    """
+    Repetitiva (while): permite agregar varios productos seguidos
+    El usuario decide cuándo terminar
+    """
+    print("\n--- MODO AGREGAR MÚLTIPLES PRODUCTOS ---")
+    print("Escribe 'fin' en el nombre para terminar\n")
+    
+    while True:
         nombre = input("Nombre del producto: ").lower()
         
-        # Condicional para salir del bucle
         if nombre == 'fin':
             break
         
         cantidad = int(input("Cantidad: "))
-        
-        # Usar el módulo condicional de validación
-        es_valida, mensaje = validar_cantidad(cantidad)
-        
-        if es_valida:
-            # Si el producto ya existe, sumar cantidad
-            if nombre in inventario:
-                inventario[nombre] += cantidad
-                print(f"  ✓ Se sumaron {cantidad} a '{nombre}'. Total: {inventario[nombre]}")
-            else:
-                inventario[nombre] = cantidad
-                print(f"  ✓ Producto '{nombre}' agregado con {cantidad} unidades")
-            contador += 1
-        else:
-            print(f"  ✗ No se agregó '{nombre}': {mensaje}")
+        inventario, mensaje = procesar_agregado(inventario, nombre, cantidad)
+        print(mensaje)
     
-    print(f"\n▶ Se agregaron {contador} productos al inventario")
     return inventario
 
-# ---------- MÓDULO 4: ESTRUCTURA REPETITIVA (for) ----------
 def mostrar_inventario(inventario):
     """
-    Muestra todo el inventario usando un bucle for
+    Repetitiva (for): recorre y muestra todos los productos
     """
     print("\n" + "=" * 50)
     print("   INVENTARIO ACTUAL")
     print("=" * 50)
     
-    # Bucle for para recorrer el diccionario
     if len(inventario) == 0:
-        print("  El inventario está vacío")
+        print("   El inventario está vacío")
     else:
+        # Bucle for para iterar sobre el diccionario
         for producto, cantidad in inventario.items():
-            print(f"  • {producto}: {cantidad} unidades")
+            print(f"   • {producto}: {cantidad} unidades")
     
     print("=" * 50)
 
-# ---------- MÓDULO 5: PROGRAMA PRINCIPAL ----------
-def main():
-    """Función principal que coordina todos los módulos"""
-    mostrar_bienvenida()
+def eliminar_producto_multiple(inventario):
+    """
+    Repetitiva (while): permite eliminar varios productos
+    """
+    print("\n--- MODO ELIMINAR PRODUCTOS ---")
+    print("Escribe 'fin' para terminar\n")
     
-    # Llamar al módulo de bucle while
-    inventario = agregar_multiple_productos()
+    while True:
+        nombre = input("Nombre del producto a eliminar: ").lower()
+        
+        if nombre == 'fin':
+            break
+        
+        if validar_producto_existe(inventario, nombre):
+            del inventario[nombre]
+            print(f"✓ Producto '{nombre}' eliminado")
+        else:
+            print(f"✗ Producto '{nombre}' no encontrado")
     
-    # Llamar al módulo de bucle for
-    mostrar_inventario(inventario)
-    
-    print("\n¡Programa finalizado!")
+    return inventario
 
-# Punto de entrada
-#if __name__ == "__main__":
- #   main()
 # ============================================
-# NUEVOS MÓDULOS PARA MENÚ INTERACTIVO
+# 4. MÓDULO DEL MENÚ (combina secuencial + condicional)
 # ============================================
 
-# ---------- MÓDULO DE MENÚ (condicional múltiple) ----------
 def mostrar_menu():
-    """Muestra las opciones del menú"""
+    """Secuencial: muestra las opciones del menú"""
     print("\n" + "-" * 40)
     print("   MENÚ PRINCIPAL")
     print("-" * 40)
-    print("1. Agregar producto")
+    print("1. Agregar productos")
     print("2. Mostrar inventario")
-    print("3. Eliminar producto")
+    print("3. Eliminar productos")
     print("4. Salir")
     print("-" * 40)
 
-def eliminar_producto(inventario, nombre):
-    """Elimina un producto del inventario"""
-    if nombre in inventario:
-        del inventario[nombre]
-        return True, f"Producto '{nombre}' eliminado"
-    else:
-        return False, f"Producto '{nombre}' no encontrado"
-
-def menu_principal():
+def ejecutar_menu():
     """
-    Controla el flujo del programa usando condicional múltiple (if-elif-else)
+    Condicional múltiple (if-elif-else) + bucle while
+    Controla el flujo principal del programa
     """
-    inventario = {}  # Comenzar con inventario vacío
+    inventario = {}
     mostrar_bienvenida()
     
     while True:
         mostrar_menu()
         opcion = input("Elige una opción (1-4): ")
         
-        # ESTRUCTURA CONDICIONAL MÚLTIPLE
         if opcion == "1":
-            print("\n--- AGREGAR PRODUCTO ---")
-            nombre = input("Nombre: ").lower()
-            cantidad = int(input("Cantidad: "))
-            
-            es_valida, mensaje = validar_cantidad(cantidad)
-            
-            if es_valida:
-                if nombre in inventario:
-                    inventario[nombre] += cantidad
-                    print(f"✓ Se sumaron {cantidad} a '{nombre}'. Total: {inventario[nombre]}")
-                else:
-                    inventario[nombre] = cantidad
-                    print(f"✓ Producto '{nombre}' agregado con {cantidad} unidades")
-            else:
-                print(f"✗ {mensaje}")
+            inventario = agregar_productos_multiple(inventario)
         
         elif opcion == "2":
             mostrar_inventario(inventario)
         
         elif opcion == "3":
-            print("\n--- ELIMINAR PRODUCTO ---")
-            nombre = input("Nombre del producto a eliminar: ").lower()
-            exito, mensaje = eliminar_producto(inventario, nombre)
-            print(f"{'✓' if exito else '✗'} {mensaje}")
+            inventario = eliminar_producto_multiple(inventario)
         
         elif opcion == "4":
-            print("\n▶ ¡Hasta luego! Gracias por usar el sistema")
+            mostrar_despedida()
             break
         
         else:
-            print("✗ Opción no válida. Elige 1, 2, 3 o 4")
+            print("✗ Opción no válida. Por favor elige 1, 2, 3 o 4")
 
-# ---------- PROGRAMA PRINCIPAL (nueva versión) ----------
-def main_v3():
-    """Versión 3 del programa: con menú interactivo"""
-    menu_principal()
+# ============================================
+# 5. PROGRAMA PRINCIPAL
+# ============================================
 
-# Cambia el punto de entrada:
+def main():
+    """Función principal que inicia el programa"""
+    ejecutar_menu()
+
+# Punto de entrada
 if __name__ == "__main__":
-    # main()      # Versión anterior (agregar múltiple)
-    main_v3()      # Nueva versión (menú interactivo)
+    main()
