@@ -50,7 +50,7 @@ def validar_cantidad(cantidad):
 
 def main_v2():
     """Versión 2: Incorpora validación condicional"""
-    mostrar_bienvenida()99
+    mostrar_bienvenida()
     
     # Entrada de datos (secuencial)
     nombre = input("Nombre del producto: ")
@@ -70,6 +70,6 @@ def main_v2():
     print("\n--- FIN DEL PROGRAMA ---")
 
 # Comenta la ejecución anterior y usa la nueva:
-# if __name__ == "__main__":
+if __name__ == "__main__":
 # main() 	# Version 1
   main_v2()	# Version 2
