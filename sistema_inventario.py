@@ -281,9 +281,52 @@ def mostrar_precios(precios):
     print("=" * 50)
 
 # ============================================
-# 4. MÓDULO DEL MENÚ (combina secuencial + condicional)
+# MÓDULOS PARA PERSISTENCIA (guardar/cargar)
 # ============================================
 
+import json  # Módulo para guardar datos en formato JSON
+
+def guardar_inventario(inventario, precios, archivo="inventario.json"):
+    """
+    Guarda el inventario y precios en un archivo (estructura secuencial)
+    """
+    try:
+        datos = {
+            "inventario": inventario,
+            "precios": precios
+        }
+        with open(archivo, 'w') as f:
+            json.dump(datos, f, indent=4)
+        print(f"\n✓ Datos guardados en '{archivo}'")
+        return True
+    except Exception as e:
+        print(f"\n✗ Error al guardar: {e}")
+        return False
+
+def cargar_inventario(archivo="inventario.json"):
+    """
+    Carga el inventario y precios desde un archivo (estructura secuencial)
+    Retorna: (inventario, precios)
+    """
+    try:
+        with open(archivo, 'r') as f:
+            datos = json.load(f)
+        inventario = datos.get("inventario", {})
+        precios = datos.get("precios", {})
+        print(f"\n✓ Datos cargados desde '{archivo}'")
+        print(f"   {len(inventario)} productos en inventario")
+        print(f"   {len(precios)} precios registrados")
+        return inventario, precios
+    except FileNotFoundError:
+        print(f"\n⚠️ Archivo '{archivo}' no encontrado. Comenzando con datos vacíos.")
+        return {}, {}
+    except Exception as e:
+        print(f"\n✗ Error al cargar: {e}")
+        return {}, {}
+
+# ============================================
+# 4. MÓDULO DEL MENÚ (combina secuencial + condicional)
+# ============================================
 def mostrar_menu():
     print("\n" + "-" * 40)
     print("   MENÚ PRINCIPAL")
@@ -293,20 +336,22 @@ def mostrar_menu():
     print("3. Eliminar productos")
     print("4. Buscar producto")
     print("5. Modificar cantidad")
-    print("6. Agregar precios")        # NUEVO
-    print("7. Mostrar precios")        # NUEVO
-    print("8. Calcular valor total")   # NUEVO
-    print("9. Salir")                  # CAMBIA A 9
+    print("6. Agregar precios")
+    print("7. Mostrar precios")
+    print("8. Calcular valor total")
+    print("9. Guardar datos")      # NUEVO
+    print("10. Cargar datos")      # NUEVO
+    print("11. Salir")             # CAMBIA A 11
     print("-" * 40)
 
 def ejecutar_menu():
-    inventario = {}
-    precios = {}  # NUEVO diccionario para precios
+    # Intentar cargar datos al iniciar
+    inventario, precios = cargar_inventario()
     mostrar_bienvenida()
 
     while True:
         mostrar_menu()
-        opcion = input("Elige una opción (1-9): ")
+        opcion = input("Elige una opción (1-11): ")
 
         if opcion == "1":
             inventario = agregar_productos_multiple(inventario)
@@ -318,13 +363,21 @@ def ejecutar_menu():
             inventario = buscar_producto(inventario)
         elif opcion == "5":
             inventario = modificar_cantidad(inventario)
-        elif opcion == "6":           # NUEVO
+        elif opcion == "6":
             precios = agregar_precio(precios)
-        elif opcion == "7":           # NUEVO
+        elif opcion == "7":
             mostrar_precios(precios)
-        elif opcion == "8":           # NUEVO
+        elif opcion == "8":
             calcular_valor_total(inventario, precios)
-        elif opcion == "9":           # CAMBIA A 9
+        elif opcion == "9":        # NUEVO
+            guardar_inventario(inventario, precios)
+        elif opcion == "10":       # NUEVO
+            inventario, precios = cargar_inventario()
+        elif opcion == "11":       # CAMBIA A 11
+            # Preguntar si guardar antes de salir (condicional)
+            guardar = input("¿Guardar datos antes de salir? (s/n): ").lower()
+            if guardar == 's':
+                guardar_inventario(inventario, precios)
             mostrar_despedida()
             break
         else:
