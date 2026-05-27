@@ -210,11 +210,81 @@ def modificar_cantidad(inventario):
     return inventario
 
 # ============================================
+# NUEVOS MÓDULOS PARA MANEJO DE PRECIOS
+# ============================================
+
+def agregar_precio(precios):
+    """
+    Permite agregar precios a los productos
+    Usa bucle while + condicionales
+    """
+    print("\n--- AGREGAR PRECIOS ---")
+    print("Escribe 'fin' en el nombre para terminar\n")
+    
+    while True:
+        nombre = input("Nombre del producto: ").lower()
+        
+        if nombre == 'fin':
+            break
+        
+        try:
+            precio = float(input(f"Precio de '{nombre}': $"))
+            if precio > 0:
+                precios[nombre] = precio
+                print(f"✓ Precio de '{nombre}' registrado: ${precio:.2f}")
+            else:
+                print("✗ El precio debe ser mayor que cero")
+        except ValueError:
+            print("✗ Precio inválido. Usa números (ej: 1.50)")
+    
+    return precios
+
+def calcular_valor_total(inventario, precios):
+    """
+    Calcula el valor total del inventario (cantidad * precio)
+    Usa bucle for + condicionales
+    """
+    total = 0
+    productos_sin_precio = []
+    
+    for producto, cantidad in inventario.items():
+        if producto in precios:
+            total += precios[producto] * cantidad
+        else:
+            productos_sin_precio.append(producto)
+    
+    # Mostrar reporte (estructura secuencial)
+    print("\n" + "=" * 50)
+    print("   VALOR TOTAL DEL INVENTARIO")
+    print("=" * 50)
+    print(f"   Total: ${total:.2f}")
+    
+    if productos_sin_precio:
+        print(f"\n   ⚠️ Productos sin precio definido:")
+        for p in productos_sin_precio:
+            print(f"      - {p}")
+    
+    return total
+
+def mostrar_precios(precios):
+    """Muestra todos los precios registrados (bucle for)"""
+    print("\n" + "=" * 50)
+    print("   LISTA DE PRECIOS")
+    print("=" * 50)
+    
+    if len(precios) == 0:
+        print("   No hay precios registrados")
+    else:
+        for producto, precio in precios.items():
+            print(f"   • {producto}: ${precio:.2f}")
+    
+    print("=" * 50)
+
+# ============================================
 # 4. MÓDULO DEL MENÚ (combina secuencial + condicional)
 # ============================================
 
 def mostrar_menu():
-    """Secuencial: muestra las opciones del menú"""
     print("\n" + "-" * 40)
     print("   MENÚ PRINCIPAL")
     print("-" * 40)
@@ -222,42 +292,43 @@ def mostrar_menu():
     print("2. Mostrar inventario")
     print("3. Eliminar productos")
     print("4. Buscar producto")
-    print("5. Modificar cantidad")  # NUEVA OPCION
-    print("6. Salir")
+    print("5. Modificar cantidad")
+    print("6. Agregar precios")        # NUEVO
+    print("7. Mostrar precios")        # NUEVO
+    print("8. Calcular valor total")   # NUEVO
+    print("9. Salir")                  # CAMBIA A 9
     print("-" * 40)
 
 def ejecutar_menu():
-    """
-    Condicional múltiple (if-elif-else) + bucle while
-    Controla el flujo principal del programa
-    """
     inventario = {}
+    precios = {}  # NUEVO diccionario para precios
     mostrar_bienvenida()
 
     while True:
         mostrar_menu()
-        opcion = input("Elige una opción (1-6): ")
+        opcion = input("Elige una opción (1-9): ")
 
         if opcion == "1":
             inventario = agregar_productos_multiple(inventario)
-
         elif opcion == "2":
             mostrar_inventario(inventario)
-
         elif opcion == "3":
             inventario = eliminar_producto_multiple(inventario)
-
         elif opcion == "4":
             inventario = buscar_producto(inventario)
-
         elif opcion == "5":
             inventario = modificar_cantidad(inventario)
-
-        elif opcion == "6":
+        elif opcion == "6":           # NUEVO
+            precios = agregar_precio(precios)
+        elif opcion == "7":           # NUEVO
+            mostrar_precios(precios)
+        elif opcion == "8":           # NUEVO
+            calcular_valor_total(inventario, precios)
+        elif opcion == "9":           # CAMBIA A 9
             mostrar_despedida()
             break
         else:
-            print("✗ Opción no válida. Por favor elige 1, 2, 3, 4 o 5")
+            print("✗ Opción no válida")
 
 # ============================================
 # 5. PROGRAMA PRINCIPAL
